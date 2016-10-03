@@ -20,7 +20,7 @@
 #################################################################################
 import logging
 
-from openerp.osv import fields, orm
+from openerp import fields
 
 _logger = logging.getLogger(__name__)
 try:
@@ -34,26 +34,26 @@ def _get_code(self, cr, uid, context=None):
     return [(r, r) for r in getCodes()]
 
 
-class tr_barcode_config(orm.Model):
+class tr_barcode_config(models.Model):
     _name = 'tr.barcode.config'
-    _columns = {
-        'res_model': fields.many2one('ir.model', 'Object',
+
+    res_model = fields.Many2one('ir.model', 'Object'
                                      domain=[('barcode_model', '=', True)],
                                      required=True),
-        'field': fields.many2one('ir.model.fields', 'Field',
+    field = fields', 'Field'
                                  domain=[('ttype', '=', 'char')],
                                  required=True),
         'width':
-            fields.integer("Width",
+            fields.Integer("Width",
                            help="Leave Blank or 0(ZERO) for default size"),
         'height':
-            fields.integer("Height",
+            fields.Integer("Height",
                            help="Leave Blank or 0(ZERO) for default size"),
         'hr_form':
-            fields.boolean("Human Readable",
+            fields.Boolean("Human Readable",
                            help="To generate Barcode In Human readable form"),
-        'barcode_type': fields.selection(_get_code, 'Type', required=True),
-        }
+    barcode_type = fields.Selection(_get_code, 'Type', required=True)
+    
     _sql_constraints = [
         ('res_model_uniq',
          'unique(res_model)',

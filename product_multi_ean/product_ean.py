@@ -20,22 +20,21 @@
 ##############################################################################
 import logging
 
-from openerp.osv import orm, fields
+from openerp import fields
 from openerp.addons.product import product as addon_product
 
 
 _logger = logging.getLogger(__name__)
 
 
-class ProductEan13(orm.Model):
+class ProductEan13(models.Model):
     _name = 'product.ean13'
     _description = "List of EAN13 for a product."
-    _columns = {'name': fields.char('EAN13', size=13),
-                'product_id':
-                    fields.many2one('product.product',
+    name = fields.Char('EAN13', size=13)
+    product_id = fields.Many2one('product.product',
                                     'Product',
-                                    required=True),
-                'sequence': fields.integer('Sequence'), }
+                                    required=True)
+    sequence = fields.Integer('Sequence')
     _order = 'sequence'
 
     def _check_ean_key(self, cr, uid, ids):
@@ -63,7 +62,7 @@ class ProductEan13(orm.Model):
         return super(ProductEan13, self).create(cr, uid, vals, context=context)
 
 
-class ProductProduct(orm.Model):
+class ProductProduct(models.Model):
     _inherit = 'product.product'
 
     def _auto_init(self, cr, context=None):
@@ -113,20 +112,18 @@ class ProductProduct(orm.Model):
                 context=context)
         return True
 
-    _columns = {
-        'ean13_ids': fields.one2many('product.ean13', 'product_id', 'EAN13'),
-        'ean13': fields.function(
-            _get_main_ean13,
-            fnct_inv=_write_ean,
-            type='many2one',
-            obj='product.ean13',
+    ean13_ids = fields.One2many('product.ean13', 'product_id', 'EAN13')
+    ean13 = fields.Many2one('product.ean13',
+            compute=_get_main_ean13,
+            inverse=_write_ean,
             string='Main EAN13',
             readonly=True,
-            store={
-                'product.product':
-                    (lambda self, cr, uid, ids, c=None: ids, ['ean13_ids'], 10),
-                'product.ean13':
-                    (_get_ean, [], 10)})}
+#            store={
+#                'product.product':
+#                    (lambda self, cr, uid, ids, c=None: ids, ['ean13_ids'], 10),
+#                'product.ean13':
+#                    (_get_ean, [], 10)})}
+                        )
 
     # disable constraint
     def _check_ean_key(self, cr, uid, ids):

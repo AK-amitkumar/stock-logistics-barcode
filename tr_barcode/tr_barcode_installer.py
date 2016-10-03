@@ -19,19 +19,19 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, orm
+from openerp import fields
 import copy
 
 
-class tr_barcode_installer(orm.TransientModel):
+class tr_barcode_installer(models.TransientModel):
     """ config wizard for barcode module """
     _name = 'tr_barcode.installer'
     _inherit = 'res.config.installer'
-    _columns = {
-        'models_ids': fields.many2many('ir.model',
+
+    models_ids = fields.Many2many('ir.model'
                                        'tr_barcode_installer_mode_rel',
                                        'tr_id', 'model_id', 'Models'),
-    }
+
 
     def create(self, cr, uid, vals, context=None):
         """ create method """

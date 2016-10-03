@@ -19,11 +19,11 @@
 #
 #################################################################################
 
-from openerp.osv import fields, orm
+from openerp import fields
 from openerp.addons.tr_barcode.tr_barcode import _get_code
 
 
-class tr_barcode_settings(orm.TransientModel):
+class tr_barcode_settings(models.TransientModel):
     _inherit = 'tr.barcode.settings'
 
     def _get_default_picking_config_id(self, cr, uid, context=None):
@@ -38,40 +38,40 @@ class tr_barcode_settings(orm.TransientModel):
                                 context=context)
         return res and res[0] or False
 
-    _columns = {
-        'picking_config_id': fields.many2one('tr.barcode.config',
+
+    picking_config_id = fields.Many2one('tr.barcode.config'
                                              'Picking Config'),
-        'picking_model_id': fields.related('picking_config_id',
+    picking_model_id = fields.Related('picking_config_id'
                                            'res_model',
                                            type='many2one',
                                            relation="ir.model",
                                            string="Model"),
-        'picking_field_id': fields.related('picking_config_id',
+    picking_field_id = fields.Related('picking_config_id'
                                            'field',
                                            type='many2one',
                                            relation="ir.model.fields",
                                            string="Field"),
-        'picking_width': fields.related('picking_config_id',
+    picking_width = fields.Related('picking_config_id'
                                         'width',
                                         type='integer',
                                         string="Width",
                                         help="Leave Blank or 0(ZERO) for default size"),
-        'picking_height': fields.related('picking_config_id',
+    picking_height = fields.Related('picking_config_id'
                                          'height',
                                          type='integer',
                                          string="Height",
                                          help="Leave Blank or 0(ZERO) for default size"),
-        'picking_hr_form': fields.related('picking_config_id',
+    picking_hr_form = fields.Related('picking_config_id'
                                           'hr_form',
                                           type='boolean',
                                           string="Human Readable",
                                           help="To generate Barcode In Human readable form"),
-        'picking_barcode_type': fields.related('picking_config_id',
+    picking_barcode_type = fields.Related('picking_config_id'
                                                'barcode_type',
                                                type='selection',
                                                selection=_get_code,
                                                string="Field"),
-        }
+    
     _defaults = {
         'picking_config_id': _get_default_picking_config_id,
         }
