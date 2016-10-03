@@ -20,7 +20,7 @@
 ##############################################################################
 import logging
 
-from openerp.osv import fields, osv, orm
+from openerp import fields, models
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -35,7 +35,7 @@ def _get_code(self, cr, uid, context=None):
     return [(r, r) for r in getCodes()]
 
 
-class tr_barcode_wizard(orm.TransientModel):
+class tr_barcode_wizard(models.TransientModel):
     """ wizard for barcode """
     _name = "tr.barcode.wizard"
     _description = "Barcode Wizard for generic use"
@@ -51,22 +51,22 @@ class tr_barcode_wizard(orm.TransientModel):
                                                              context=context)
         return vals and vals.x_barcode_id and vals.x_barcode_id.code or False
 
-    _columns = {
-        'barcode': fields.char('Barcode', size=256),
+
+    barcode = fields.Char('Barcode', size=256)
         'width':
-            fields.integer("Width",
+            fields.Integer("Width",
                            help="Leave Blank or 0(ZERO) for default size"),
         'height':
-            fields.integer("Height",
+            fields.Integer("Height",
                            help="Leave Blank or 0(ZERO) for default size"),
         'hr_form':
-            fields.boolean("Human Readable",
+            fields.Boolean("Human Readable",
                            help="To genrate Barcode In Human readable form"),
-        'barcode_type': fields.selection(_get_code, 'Type'),
+    barcode_type = fields.Selection(_get_code, 'Type')
         'hr_form':
-            fields.boolean("Human Readable",
+            fields.Boolean("Human Readable",
                            help="To genrate Barcode In Human readable form"),
-        }
+    
 
     _defaults = {
         'barcode': _get_val,
@@ -100,10 +100,10 @@ class tr_barcode_wizard(orm.TransientModel):
         barcode_pool = self.pool.get('tr.barcode')
         for self_obj in self.browse(cr, uid, ids, context=context):
             if not self_obj.barcode:
-                raise osv.except_osv(_('Error'),
+                raise UserError(_('Error'),
                                      _('Please specify code to generate Barcode !'))
             if not self_obj.barcode_type:
-                raise osv.except_osv(_('Error'), _('Please Select Type !'))
+                raise UserError(_('Error'), _('Please Select Type !'))
             cr_id = barcode_pool.create(cr, uid, {
                 'code': self_obj.barcode,
                 'barcode_type': self_obj.barcode_type,

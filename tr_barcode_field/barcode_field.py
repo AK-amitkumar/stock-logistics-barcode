@@ -19,10 +19,10 @@
 #
 #################################################################################
 
-from openerp.osv import orm
 
 
-class tr_barcode_installer(orm.TransientModel):
+
+class tr_barcode_installer(models.TransientModel):
     _inherit = 'tr.barcode.settings'
 
     def install(self, cr, uid, ids, context=None):

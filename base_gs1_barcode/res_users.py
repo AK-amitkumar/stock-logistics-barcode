@@ -18,27 +18,27 @@
 #
 ##############################################################################
 
-from openerp.osv import orm, fields
+from openerp import fields
 
 # XXX This would probably be best in res_config_users
-class res_users(orm.Model):
+class res_users(models.Model):
     """Add the bar code decoding configuration to the user profile"""
     _inherit = 'res.users'
 
-    _columns = {
+
         # XXX those should be properties, not standard fields
-        'gs1_barcode_prefix': fields.char(
+    gs1_barcode_prefix = fields.Char(
             'Prefix', size=64,
             help="The prefix that the barcode scanner will send when GS1-128 "
                  "or GS1-Datamatrix codes are scanned. No prefix is expected "
                  "if this fields is left empty"
-            ),
-        'gs1_barcode_separator': fields.char(
+            )
+    gs1_barcode_separator = fields.Char(
             'Group Separator', size=1,
             help="The characters that the barcode scanner will send when a "
                  "<GS> (Group Separator) is encountered in a GS1-128 or "
                  "GS1-Datamatrix code. <GS> is usually found when the data "
                  "is of variable length. The ASCII character 29 will be "
                  "expected by default if this field is left empty."
-            ),
-    }
+            )
+

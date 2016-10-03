@@ -21,24 +21,24 @@
 
 import copy
 
-from openerp.osv import fields, orm
+from openerp import fields
 
 
-class ir_model(orm.Model):
+class ir_model(models.Model):
     _inherit = 'ir.model'
-    _columns = {
+
         'barcode_model':
-            fields.boolean('Barcode linked',
+            fields.Boolean('Barcode linked',
                            help='If checked, by default the barcode '
                            'configuration will get this module '
                            'in the list'),
-        }
+    
     _defaults = {
         'barcode_model': False,
         }
 
 
-class tr_barcode_settings(orm.TransientModel):
+class tr_barcode_settings(models.TransientModel):
     _name = 'tr.barcode.settings'
     _inherit = 'res.config.settings'
 
@@ -47,12 +47,12 @@ class tr_barcode_settings(orm.TransientModel):
                                                 [('barcode_model', '=', True)],
                                                 context=context)
 
-    _columns = {
+
         'models_ids':
-            fields.many2many('ir.model',
+            fields.Many2many('ir.model',
                              'tr_barcode_settings_mode_rel',
                              'tr_id', 'model_id', 'Models'),
-        }
+    
     _defaults = {
         'models_ids': _get_default_barcode_models,
         }

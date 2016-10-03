@@ -25,7 +25,7 @@ import base64
 from tempfile import mkstemp
 
 _logger = logging.getLogger(__name__)
-from openerp.osv import fields, osv, orm
+from openerp import fields, models
 
 try:
     from reportlab.graphics.barcode import createBarcodeDrawing, getCodes
@@ -40,7 +40,7 @@ def _get_code(self, cr, uid, context=None):
     return codes
 
 
-class tr_barcode(orm.Model):
+class tr_barcode(models.Model):
     """ Barcode Class """
     _name = "tr.barcode"
     _description = "Barcode"
@@ -53,28 +53,27 @@ class tr_barcode(orm.Model):
             res[barcode.id] = barcode.code
         return res
 
-    _columns = {
-        'code': fields.char('Barcode', size=256),
-        'code2': fields.function(_get_barcode2,
-                                 method=True,
+
+    code = fields.Char('Barcode', size=256)
+    code2 = fields.Char(computed='_get_barcode2',
+                                 #method=True,
                                  string='Barcode2',
-                                 type='char',
                                  size=256,
-                                 store=True),
-        'res_model': fields.char('Model', size=256),
-        'res_id': fields.integer('Res Id'),
-        'image': fields.binary('Data'),
+                                 store=True)
+    res_model = fields.Char('Model', size=256)
+    res_id = fields.Integer('Res Id')
+    image = fields.Binary('Data')
         'width':
-            fields.integer("Width",
+            fields.Integer("Width",
                            help="Leave Blank or 0(ZERO) for default size"),
         'height':
-            fields.integer("Height",
+            fields.Integer("Height",
                            help="Leave Blank or 0(ZERO) for default size"),
         'hr_form':
-            fields.boolean("Human Readable",
+            fields.Boolean("Human Readable",
                            help="To genrate Barcode In Human readable form"),
-        'barcode_type': fields.selection(_get_code, 'Type'),
-    }
+    barcode_type = fields.Selection(_get_code, 'Type')
+
 
     def get_image(self, value, width, height, hr, code='QR'):
         """ genrating image for barcode """
@@ -92,7 +91,7 @@ class tr_barcode(orm.Model):
             try:
                 ret_val = createBarcodeDrawing(code, value=str(value), **options)
             except Exception, e:
-                raise osv.except_osv('Error', e)
+                raise UserError('Error', e)
             image_data = ret_val.asString('png')
             return base64.encodestring(image_data)
         else:

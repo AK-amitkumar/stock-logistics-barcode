@@ -19,10 +19,10 @@
 #
 #################################################################################
 
-from openerp.osv import fields, orm
+from openerp import fields
 
 
-class tr_barcode(orm.Model):
+class tr_barcode(models.Model):
 
     _inherit = 'tr.barcode'
 
@@ -38,12 +38,12 @@ class tr_barcode(orm.Model):
             res[record.id] = link
         return res
 
-    _columns = {
-        'link': fields.function(_name_get_barcode,
+
+    link = fields.Char(compute=_name_get_barcode,
                                 method=True,
                                 type='char',
                                 size=100,
-                                string="Link"),
-    }
+                                string="Link")
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

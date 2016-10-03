@@ -25,44 +25,44 @@ import re
 import time
 
 from openerp import netsvc
-from openerp.osv import orm, fields
+from openerp import fields
 from openerp.tools.translate import _
 
-class invalid_gs1_barcode(orm.except_orm):
+class invalid_gs1_barcode(models.except_orm):
     """Indicate an error occurred while decoding a GS1-128/GS1-Datamatrix code"""
     pass
 
-class gs1_barcode(orm.Model):
+class gs1_barcode(models.Model):
     """GS1-128/GS1-Datamatrix barcode decoder API and configuration"""
     _name = "gs1_barcode"
     _description = __doc__
-    _columns = {
-        'ai' : fields.char('Application Identifer', size=14,
+
+    ai = fields.Char('Application Identifer', size=14
                            help='The standard Application Identifier (AI)',
                            required=1, select=1),
-        'name': fields.char('Description', size=64, required=True, select=1,
+    name = fields.Char('Description', size=64, required=True, select=1
                             translate=True),
-        'length_fixed': fields.boolean('Fixed-length Data',
+    length_fixed = fields.Boolean('Fixed-length Data'
                                        help='Indicates whether the length of '
                                             'the data for this Application '
                                             'Identifier is fixed or not.'),
-        'length_max': fields.integer('Maximum Data Length',
+    length_max = fields.Integer('Maximum Data Length'
                                      help='Maximum length of the data for this '
                                           'Application Identifier.', required=1),
-        'length_min': fields.integer('Minimum Data Length',
+    length_min = fields.Integer('Minimum Data Length'
                                      help='Minimum length of the data for '
                                           'this Application Identifier.'),
-        'decimal': fields.boolean('Decimal Indicator',
+    decimal = fields.Boolean('Decimal Indicator'
                                   help='Indicates whether a digit is expected '
                                        'before the data for this Application '
                                        'Identifier to indicate the position of '
                                        'the decimal point.'
                                   ),
-        'type': fields.selection([ ('string', 'Any character string'),
+    type = fields.Selection([ ('string', 'Any character string')
                                     ('numeric', 'Numeric value'),
                                     ('date', 'Date') ],
                                     'Data Type', required=1),
-    }
+
     _defaults = {
         'length_fixed': True,
         'length_max': 30,

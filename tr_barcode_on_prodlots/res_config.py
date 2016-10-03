@@ -19,11 +19,11 @@
 #
 #################################################################################
 
-from openerp.osv import fields, orm
+from openerp import fields
 from openerp.addons.tr_barcode.tr_barcode import _get_code
 
 
-class tr_barcode_settings(orm.TransientModel):
+class tr_barcode_settings(models.TransientModel):
     _inherit = 'tr.barcode.settings'
 
     def _get_default_prodlot_config_id(self, cr, uid, context=None):
@@ -38,34 +38,34 @@ class tr_barcode_settings(orm.TransientModel):
                                 context=context)
         return res and res[0] or False
 
-    _columns = {
-        'prodlot_config_id': fields.many2one('tr.barcode.config',
+
+    prodlot_config_id = fields.Many2one('tr.barcode.config'
                                              'Production lot Config'),
-        'prodlot_model_id': fields.related('prodlot_config_id', 'res_model',
+    prodlot_model_id = fields.Related('prodlot_config_id', 'res_model'
                                            type='many2one',
                                            relation="ir.model",
                                            string="Model"),
-        'prodlot_field_id': fields.related('prodlot_config_id', 'field',
+    prodlot_field_id = fields.Related('prodlot_config_id', 'field'
                                            type='many2one',
                                            relation="ir.model.fields",
                                            string="Field"),
-        'prodlot_width': fields.related('prodlot_config_id', 'width',
+    prodlot_width = fields.Related('prodlot_config_id', 'width'
                                         type='integer',
                                         string="Width",
                                         help="Leave Blank or 0(ZERO) for default size"),
-        'prodlot_height': fields.related('prodlot_config_id', 'height',
+    prodlot_height = fields.Related('prodlot_config_id', 'height'
                                          type='integer',
                                          string="Height",
                                          help="Leave Blank or 0(ZERO) for default size"),
-        'prodlot_hr_form': fields.related('prodlot_config_id', 'hr_form',
+    prodlot_hr_form = fields.Related('prodlot_config_id', 'hr_form'
                                           type='boolean',
                                           string="Human Readable",
                                           help="To generate Barcode In Human readable form"),
-        'prodlot_barcode_type': fields.related('prodlot_config_id', 'barcode_type',
+    prodlot_barcode_type = fields.Related('prodlot_config_id', 'barcode_type'
                                                type='selection',
                                                selection=_get_code,
                                                string="Field"),
-        }
+    
     _defaults = {
         'prodlot_config_id': _get_default_prodlot_config_id,
         }

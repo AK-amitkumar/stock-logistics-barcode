@@ -19,7 +19,7 @@
 #
 #################################################################################
 
-from openerp.osv import orm
+
 from openerp import pooler
 from openerp import SUPERUSER_ID
 
@@ -97,7 +97,7 @@ def create_barcode(cr, uid, id, vals, model, context=None):
     return barcode_id
 
 
-class barcode_osv(orm.Model):
+class barcode_osv(models.Model):
     _register = False
 
     def __init__(self, pool, cr):
@@ -112,7 +112,7 @@ class barcode_osv(orm.Model):
 
     def create(self, cr, uid, vals, context=None):
         barcode_id = False
-        res = super(orm.Model, self).create(cr, uid, vals, context=context)
+        res = super(models.Model, self).create(cr, uid, vals, context=context)
 
         # modification because the orm create method seems to go into the
         # write method so there is 2 barcode created instead of one
@@ -167,6 +167,6 @@ class barcode_osv(orm.Model):
                               vals,
                               self._name,
                               context=context)
-        return super(orm.Model, self).write(cr, uid, ids, vals, context=context)
+        return super(models.Model, self).write(cr, uid, ids, vals, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
